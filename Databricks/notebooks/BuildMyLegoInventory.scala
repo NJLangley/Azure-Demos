@@ -11,7 +11,17 @@
 // COMMAND ----------
 
 // MAGIC %md
-// MAGIC ##Configure any variable we want to reuse throughout the notebook
+// MAGIC ##Import libraries we need
+
+// COMMAND ----------
+
+// Need this import for the agg() function in the last example
+import org.apache.spark.SparkContext._
+
+// COMMAND ----------
+
+// MAGIC %md
+// MAGIC ##Configure variables we want to reuse throughout the notebook
 
 // COMMAND ----------
 
@@ -78,7 +88,7 @@ inventoryParts.createOrReplaceTempView("inventoryParts")
 // COMMAND ----------
 
 // MAGIC %md
-// MAGIC ##Have a look at the data to see how it looks...
+// MAGIC ##Display the data so we can look at the structure
 
 // COMMAND ----------
 
@@ -87,16 +97,8 @@ display(mySets)
 // COMMAND ----------
 
 // MAGIC %md
-// MAGIC ##Query the data using Scala
-
-// COMMAND ----------
-
-
-
-// COMMAND ----------
-
-// MAGIC %md
-// MAGIC ##We can also do the same query using SQL
+// MAGIC ##We can query the data using SQL, storing the result in a temporary view
+// MAGIC We are using a view and not a table, as the table is visiable to all users of the cluster, and we just want a transient step in our processing. Createing a view (or table by default) does not cache the data to memory.
 
 // COMMAND ----------
 
@@ -123,7 +125,22 @@ display(mySets)
 // COMMAND ----------
 
 // MAGIC %md
-// MAGIC ##Now write the results from both queries back to data lake using Scala
+// MAGIC ##We will use this view for 2 queries, so explcitly cache it in memory
+// MAGIC 
+// MAGIC If we built a table in the above query, we could use the SQL syntax below to cache it
+// MAGIC 
+// MAGIC     CACHE TABLE CACHED_TABLE AS
+// MAGIC     SELECT *
+// MAGIC     FROM ...
+
+// COMMAND ----------
+
+sqlContext.cacheTable("default.my_sets_parts")
+
+// COMMAND ----------
+
+// MAGIC %md
+// MAGIC ##Write the results from the SQL query back to the lake using SQL
 
 // COMMAND ----------
 
@@ -137,3 +154,30 @@ display(mySets)
 // MAGIC AS
 // MAGIC SELECT *
 // MAGIC FROM vw_my_sets_parts
+
+// COMMAND ----------
+
+// MAGIC %md
+// MAGIC ##Use Scala to group the results of the SQL query into parts, and write that to the lake too
+
+// COMMAND ----------
+
+// Define a Scala UDF
+val spareQuantitiy = udf( (isSpare: String,  quantity: Int) => if (isSpare == "t") {quantity} else {0} )
+
+val mySetParts = sqlContext.table("vw_my_sets_parts")
+val myParts = mySetParts.select(col("part_num") as "part_num",
+                                col("color_id") as "color_id",
+                                col("quantity") as "quantity",
+                                spareQuantitiy(col("is_spare"), col("quantity")) as "spare_quantity")
+                        .groupBy("part_num", "color_id")
+                        .agg(sum("quantity"),sum("spare_quantity"))
+                        // This sets the partitoning
+                        .repartition(col("color_id"))
+                        .write
+                        // This writes the partitions to folders using hive syntax. Without the repartition we get about 1 row per file
+                        .partitionBy("color_id")
+                        .mode("overwrite")
+                        .format("com.databricks.spark.csv")
+                        .option("header", "true")
+                        .save("/mnt/demo-lake/processed/rebrickable/databricks/my_parts")
