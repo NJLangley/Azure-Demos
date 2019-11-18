@@ -1,0 +1,10 @@
+{
+	"name": "Nialls_Keys",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://Nialls-Keys.vault.azure.net/"
+		}
+	}
+}
