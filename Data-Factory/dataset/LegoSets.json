@@ -1,0 +1,46 @@
+{
+	"name": "LegoSets",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Nialls_Data_Lake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "sets.csv",
+				"folderPath": "raw/rebrickable/csv",
+				"fileSystem": "demo-lake"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "set_num",
+				"type": "String"
+			},
+			{
+				"name": "name",
+				"type": "String"
+			},
+			{
+				"name": "year",
+				"type": "String"
+			},
+			{
+				"name": "theme_id",
+				"type": "String"
+			},
+			{
+				"name": "num_parts",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

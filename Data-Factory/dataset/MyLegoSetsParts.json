@@ -1,0 +1,24 @@
+{
+	"name": "MyLegoSetsParts",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Nialls_Data_Lake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "processed/rebrickable/sets-parts",
+				"fileSystem": "demo-lake"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

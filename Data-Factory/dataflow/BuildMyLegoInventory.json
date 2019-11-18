@@ -1,0 +1,77 @@
+{
+	"name": "BuildMyLegoInventory",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "LegoMySets",
+						"type": "DatasetReference"
+					},
+					"name": "MyLegoSets"
+				},
+				{
+					"dataset": {
+						"referenceName": "LegoInventories",
+						"type": "DatasetReference"
+					},
+					"name": "LegoInventories"
+				},
+				{
+					"dataset": {
+						"referenceName": "LegoInventoryParts",
+						"type": "DatasetReference"
+					},
+					"name": "LegoInventoryParts"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "MyLegoSetsParts",
+						"type": "DatasetReference"
+					},
+					"name": "MyLegoSetsParts"
+				},
+				{
+					"dataset": {
+						"referenceName": "MyLegoParts",
+						"type": "DatasetReference"
+					},
+					"name": "MyLegoParts"
+				}
+			],
+			"transformations": [
+				{
+					"name": "JoinSetsAndInventories"
+				},
+				{
+					"name": "FindMaxVersionForSet"
+				},
+				{
+					"name": "FilterMaxVersionOnly"
+				},
+				{
+					"name": "JoinInventoryParts"
+				},
+				{
+					"name": "SelectColumns1"
+				},
+				{
+					"name": "SelectColumns2"
+				},
+				{
+					"name": "SelectColumnsParts"
+				},
+				{
+					"name": "GroupByPartAndColour"
+				},
+				{
+					"name": "SelectColumnsSetsParts"
+				}
+			],
+			"script": "\n\nsource(output(\n\t\tset_num as string,\n\t\tname as string,\n\t\tyear as string,\n\t\ttheme_id as string,\n\t\tnum_parts as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> MyLegoSets\nsource(output(\n\t\tid as string,\n\t\tversion as string,\n\t\tset_num as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> LegoInventories\nsource(output(\n\t\tinventory_id as string,\n\t\tpart_num as string,\n\t\tcolor_id as string,\n\t\tquantity as string,\n\t\tis_spare as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> LegoInventoryParts\nMyLegoSets, LegoInventories join(MyLegoSets@set_num == LegoInventories@set_num,\n\tjoinType:'inner',\n\tbroadcast: 'left')~> JoinSetsAndInventories\nSelectColumns1 window(over(set_num = set_num),\n\tmax_inventory_version = max(inventory_version)) ~> FindMaxVersionForSet\nFindMaxVersionForSet filter(equals(inventory_version, max_inventory_version)) ~> FilterMaxVersionOnly\nFilterMaxVersionOnly, LegoInventoryParts join(SelectColumns1@inventory_id == LegoInventoryParts@inventory_id,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinInventoryParts\nJoinSetsAndInventories select(mapColumn(\n\t\tset_num = {MyLegoSets@set_num},\n\t\tname,\n\t\tyear,\n\t\ttheme_id,\n\t\tnum_parts,\n\t\tinventory_id = id,\n\t\tinventory_version = version\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectColumns1\nJoinInventoryParts select(mapColumn(\n\t\tset_num,\n\t\tname,\n\t\tyear,\n\t\ttheme_id,\n\t\tnum_parts,\n\t\tinventory_id = {SelectColumns1@inventory_id},\n\t\tinventory_version,\n\t\tmax_inventory_version,\n\t\tpart_num,\n\t\tcolor_id,\n\t\tquantity,\n\t\tis_spare\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectColumns2\nSelectColumns2 select(mapColumn(\n\t\tpart_num,\n\t\tcolor_id,\n\t\tquantity,\n\t\tis_spare\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectColumnsParts\nSelectColumnsParts aggregate(groupBy(part_num = part_num,\n\t\tcolor_id = color_id),\n\tquantity = sum( toInteger( quantity ) ),\n\t\tis_spare_quantity = sumIf( equals( 't', is_spare ), toInteger( quantity ) )) ~> GroupByPartAndColour\nSelectColumns2 select(mapColumn(\n\t\tset_num,\n\t\tname,\n\t\tyear,\n\t\ttheme_id,\n\t\tnum_parts,\n\t\tinventory_id,\n\t\tinventory_version,\n\t\tpart_num,\n\t\tcolor_id,\n\t\tquantity,\n\t\tis_spare\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectColumnsSetsParts\nSelectColumnsSetsParts sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tfilePattern:'my_lego_sets_parts[n].csv',\n\ttruncate: true,\n\tpartitionBy('hash', 1),\n\tquoteAll: true) ~> MyLegoSetsParts\nGroupByPartAndColour sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tfilePattern:'my_lego_parts[n].csv',\n\ttruncate: true,\n\tpartitionBy('hash', 1),\n\tquoteAll: true) ~> MyLegoParts"
+		}
+	}
+}

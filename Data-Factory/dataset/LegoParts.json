@@ -1,0 +1,42 @@
+{
+	"name": "LegoParts",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Nialls_Data_Lake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "parts.csv",
+				"folderPath": "raw/rebrickable/csv",
+				"fileSystem": "demo-lake"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "part_num",
+				"type": "String"
+			},
+			{
+				"name": "name",
+				"type": "String"
+			},
+			{
+				"name": "part_cat_id",
+				"type": "String"
+			},
+			{
+				"name": "part_material_id",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
