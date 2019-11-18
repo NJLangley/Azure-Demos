@@ -523,7 +523,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "processed/rebrickable/parts",
+						"folderPath": "processed/rebrickable/data-factory/parts",
 						"fileSystem": "demo-lake"
 					},
 					"columnDelimiter": ",",
@@ -551,7 +551,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "processed/rebrickable/sets-parts",
+						"folderPath": "processed/rebrickable/data-factory/sets-parts",
 						"fileSystem": "demo-lake"
 					},
 					"columnDelimiter": ",",
