@@ -1,0 +1,694 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Nialls-Data-Factory"
+		},
+		"Nialls_Keys_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://Nialls-Keys.vault.azure.net/"
+		},
+		"Nialls_Data_Lake_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://niallsdatalake.dfs.core.windows.net"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Nialls_Keys')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('Nialls_Keys_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Nialls_Data_Lake')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('Nialls_Data_Lake_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "Nialls_Keys",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "DataLakeStorageAccountAccessKey"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Nialls_Keys')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LegoColors')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Nialls_Data_Lake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "colors.csv",
+						"folderPath": "raw/rebrickable/csv",
+						"fileSystem": "demo-lake"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "id",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "rgb",
+						"type": "String"
+					},
+					{
+						"name": "is_trans",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Nialls_Data_Lake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LegoInventories')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Nialls_Data_Lake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "inventories.csv",
+						"folderPath": "raw/rebrickable/csv",
+						"fileSystem": "demo-lake"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "id",
+						"type": "String"
+					},
+					{
+						"name": "version",
+						"type": "String"
+					},
+					{
+						"name": "set_num",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Nialls_Data_Lake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LegoInventoryParts')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Nialls_Data_Lake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "inventory_parts.csv",
+						"folderPath": "raw/rebrickable/csv",
+						"fileSystem": "demo-lake"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "inventory_id",
+						"type": "String"
+					},
+					{
+						"name": "part_num",
+						"type": "String"
+					},
+					{
+						"name": "color_id",
+						"type": "String"
+					},
+					{
+						"name": "quantity",
+						"type": "String"
+					},
+					{
+						"name": "is_spare",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Nialls_Data_Lake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LegoInventorySets')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Nialls_Data_Lake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "inventory_sets.csv",
+						"folderPath": "raw/rebrickable/csv",
+						"fileSystem": "demo-lake"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "inventory_id",
+						"type": "String"
+					},
+					{
+						"name": "set_num",
+						"type": "String"
+					},
+					{
+						"name": "quantity",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Nialls_Data_Lake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LegoMySets')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Nialls_Data_Lake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "my_sets.csv",
+						"folderPath": "raw/rebrickable/csv",
+						"fileSystem": "demo-lake"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "set_num",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "year",
+						"type": "String"
+					},
+					{
+						"name": "theme_id",
+						"type": "String"
+					},
+					{
+						"name": "num_parts",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Nialls_Data_Lake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LegoPartCategories')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Nialls_Data_Lake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "part_categories.csv",
+						"folderPath": "raw/rebrickable/csv",
+						"fileSystem": "demo-lake"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "id",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Nialls_Data_Lake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LegoPartRelationships')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Nialls_Data_Lake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "part_relationships.csv",
+						"folderPath": "raw/rebrickable/csv",
+						"fileSystem": "demo-lake"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "rel_type",
+						"type": "String"
+					},
+					{
+						"name": "child_part_num",
+						"type": "String"
+					},
+					{
+						"name": "parent_part_num",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Nialls_Data_Lake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LegoParts')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Nialls_Data_Lake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "parts.csv",
+						"folderPath": "raw/rebrickable/csv",
+						"fileSystem": "demo-lake"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "part_num",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "part_cat_id",
+						"type": "String"
+					},
+					{
+						"name": "part_material_id",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Nialls_Data_Lake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LegoSets')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Nialls_Data_Lake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "sets.csv",
+						"folderPath": "raw/rebrickable/csv",
+						"fileSystem": "demo-lake"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "set_num",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "year",
+						"type": "String"
+					},
+					{
+						"name": "theme_id",
+						"type": "String"
+					},
+					{
+						"name": "num_parts",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Nialls_Data_Lake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LegoThemes')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Nialls_Data_Lake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "themes.csv",
+						"folderPath": "raw/rebrickable/csv",
+						"fileSystem": "demo-lake"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "id",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "parent_id",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Nialls_Data_Lake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MyLegoParts')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Nialls_Data_Lake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "processed/rebrickable/parts",
+						"fileSystem": "demo-lake"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Nialls_Data_Lake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MyLegoSetsParts')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Nialls_Data_Lake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "processed/rebrickable/sets-parts",
+						"fileSystem": "demo-lake"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Nialls_Data_Lake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BuildMyLegoInventory')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "LegoMySets",
+								"type": "DatasetReference"
+							},
+							"name": "MyLegoSets",
+							"typeProperties": {}
+						},
+						{
+							"dataset": {
+								"referenceName": "LegoInventories",
+								"type": "DatasetReference"
+							},
+							"name": "LegoInventories",
+							"typeProperties": {}
+						},
+						{
+							"dataset": {
+								"referenceName": "LegoInventoryParts",
+								"type": "DatasetReference"
+							},
+							"name": "LegoInventoryParts",
+							"typeProperties": {}
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "MyLegoSetsParts",
+								"type": "DatasetReference"
+							},
+							"name": "MyLegoSetsParts"
+						},
+						{
+							"dataset": {
+								"referenceName": "MyLegoParts",
+								"type": "DatasetReference"
+							},
+							"name": "MyLegoParts"
+						}
+					],
+					"transformations": [
+						{
+							"name": "JoinSetsAndInventories"
+						},
+						{
+							"name": "FindMaxVersionForSet"
+						},
+						{
+							"name": "FilterMaxVersionOnly"
+						},
+						{
+							"name": "JoinInventoryParts"
+						},
+						{
+							"name": "SelectColumns1"
+						},
+						{
+							"name": "SelectColumns2"
+						},
+						{
+							"name": "SelectColumnsParts"
+						},
+						{
+							"name": "GroupByPartAndColour"
+						},
+						{
+							"name": "SelectColumnsSetsParts"
+						}
+					],
+					"script": "\n\nsource(output(\n\t\tset_num as string,\n\t\tname as string,\n\t\tyear as string,\n\t\ttheme_id as string,\n\t\tnum_parts as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> MyLegoSets\nsource(output(\n\t\tid as string,\n\t\tversion as string,\n\t\tset_num as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> LegoInventories\nsource(output(\n\t\tinventory_id as string,\n\t\tpart_num as string,\n\t\tcolor_id as string,\n\t\tquantity as string,\n\t\tis_spare as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> LegoInventoryParts\nMyLegoSets, LegoInventories join(MyLegoSets@set_num == LegoInventories@set_num,\n\tjoinType:'inner',\n\tbroadcast: 'left')~> JoinSetsAndInventories\nSelectColumns1 window(over(set_num),\n\tmax_inventory_version = max(inventory_version)) ~> FindMaxVersionForSet\nFindMaxVersionForSet filter(equals(inventory_version, max_inventory_version)) ~> FilterMaxVersionOnly\nFilterMaxVersionOnly, LegoInventoryParts join(SelectColumns1@inventory_id == LegoInventoryParts@inventory_id,\n\tjoinType:'inner',\n\tbroadcast: 'none')~> JoinInventoryParts\nJoinSetsAndInventories select(mapColumn(\n\t\tset_num = MyLegoSets@set_num,\n\t\tname,\n\t\tyear,\n\t\ttheme_id,\n\t\tnum_parts,\n\t\tinventory_id = id,\n\t\tinventory_version = version\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectColumns1\nJoinInventoryParts select(mapColumn(\n\t\tset_num,\n\t\tname,\n\t\tyear,\n\t\ttheme_id,\n\t\tnum_parts,\n\t\tinventory_id = SelectColumns1@inventory_id,\n\t\tinventory_version,\n\t\tmax_inventory_version,\n\t\tpart_num,\n\t\tcolor_id,\n\t\tquantity,\n\t\tis_spare\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectColumns2\nSelectColumns2 select(mapColumn(\n\t\tpart_num,\n\t\tcolor_id,\n\t\tquantity,\n\t\tis_spare\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectColumnsParts\nSelectColumnsParts aggregate(groupBy(part_num,\n\t\tcolor_id),\n\tquantity = sum( toInteger( quantity ) ),\n\t\tis_spare_quantity = sumIf( equals( 't', is_spare ), toInteger( quantity ) )) ~> GroupByPartAndColour\nSelectColumns2 select(mapColumn(\n\t\tset_num,\n\t\tname,\n\t\tyear,\n\t\ttheme_id,\n\t\tnum_parts,\n\t\tinventory_id,\n\t\tinventory_version,\n\t\tpart_num,\n\t\tcolor_id,\n\t\tquantity,\n\t\tis_spare\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectColumnsSetsParts\nSelectColumnsSetsParts sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tfilePattern:'my_lego_sets_parts[n].csv',\n\ttruncate: true,\n\tpartitionBy('hash', 1),\n\tquoteAll: true) ~> MyLegoSetsParts\nGroupByPartAndColour sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tfilePattern:'my_lego_parts[n].csv',\n\ttruncate: true,\n\tpartitionBy('hash', 1),\n\tquoteAll: true) ~> MyLegoParts"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/LegoMySets')]",
+				"[concat(variables('factoryId'), '/datasets/LegoInventories')]",
+				"[concat(variables('factoryId'), '/datasets/LegoInventoryParts')]",
+				"[concat(variables('factoryId'), '/datasets/MyLegoSetsParts')]",
+				"[concat(variables('factoryId'), '/datasets/MyLegoParts')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LegoInventoryDemo')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "BuildMyLegoInventory",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "BuildMyLegoInventory",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"MyLegoSets": {},
+									"LegoInventories": {},
+									"LegoInventoryParts": {},
+									"MyLegoSetsParts": {},
+									"MyLegoParts": {}
+								}
+							},
+							"staging": {}
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/BuildMyLegoInventory')]"
+			]
+		}
+	]
+}
