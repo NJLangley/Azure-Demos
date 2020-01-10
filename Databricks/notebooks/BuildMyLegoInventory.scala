@@ -162,8 +162,26 @@ sqlContext.cacheTable("default.my_sets_parts")
 
 // COMMAND ----------
 
+// Need this import for the agg() function in the last example
+import org.apache.spark.SparkContext._
+import org.apache.spark.sql.functions._
+import sqlContext.implicits._
+
 // Define a Scala UDF
-val spareQuantitiy = udf( (isSpare: String,  quantity: Int) => if (isSpare == "t") {quantity} else {0} )
+//val spareQuantitiy = udf( (isSpare: String,  quantity: Int) => if (isSpare == "t") {quantity} else {0} )
+
+
+
+
+def getSpareQuantity = (isSpare: String,  quantity: Int) => {
+  if (isSpare == "t") {
+    quantity
+  } else {
+    0
+  }
+}
+
+val spareQuantitiy = spark.udf.register("spareQuantitiy",getSpareQuantity)
 
 val mySetParts = sqlContext.table("vw_my_sets_parts")
 val myParts = mySetParts.select(col("part_num") as "part_num",
@@ -172,12 +190,26 @@ val myParts = mySetParts.select(col("part_num") as "part_num",
                                 spareQuantitiy(col("is_spare"), col("quantity")) as "spare_quantity")
                         .groupBy("part_num", "color_id")
                         .agg(sum("quantity"),sum("spare_quantity"))
-                        // This sets the partitoning
-                        .repartition(col("color_id"))
-                        .write
-                        // This writes the partitions to folders using hive syntax. Without the repartition we get about 1 row per file
-                        .partitionBy("color_id")
-                        .mode("overwrite")
-                        .format("com.databricks.spark.csv")
-                        .option("header", "true")
-                        .save("/mnt/demo-lake/processed/rebrickable/databricks/my_parts")
+                        
+// This sets the partitoning before we write the data
+myParts.repartition(col("color_id"))
+       .write
+       // This writes the partitions to folders using hive syntax. Without the repartition we get about 1 row per file
+       .partitionBy("color_id")
+       .mode("overwrite")
+       .format("com.databricks.spark.csv")
+       .option("header", "true")
+       .save("/mnt/demo-lake/processed/rebrickable/databricks/my_parts")
+
+// COMMAND ----------
+
+// MAGIC %md
+// MAGIC ##Finally lets have a look at the data frame we wrote to disk to see some graphs
+
+// COMMAND ----------
+
+display(myParts)
+
+// COMMAND ----------
+
+display( myParts.repartition(col("color_id")) )
