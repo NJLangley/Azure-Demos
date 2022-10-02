@@ -1,0 +1,35 @@
+{
+    "id": "5d0928c9-c788-46d0-976e-02a8de17833a",
+    "clusters": [
+        {
+            "label": "default",
+            "instance_pool_id": "0913-124702-glove3-pool-duiw13n2",
+            "policy_id": "DE62CCA2A5000035",
+            "driver_instance_pool_id": "0913-124702-glove3-pool-duiw13n2",
+            "autoscale": {
+                "min_workers": 1,
+                "max_workers": 2,
+                "mode": "LEGACY"
+            }
+        },
+        {
+            "label": "maintenance",
+            "policy_id": "DE62CCA2A5000035"
+        }
+    ],
+    "development": true,
+    "continuous": false,
+    "channel": "CURRENT",
+    "edition": "ADVANCED",
+    "photon": false,
+    "libraries": [
+        {
+            "notebook": {
+                "path": "/Repos/niall.langley@gmail.com/Azure-Demos-Private/Introduction to Databricks Delta Live Tables/1.1) Data Ingestion (SQL)"
+            }
+        }
+    ],
+    "name": "AdventureWorks_Demo1",
+    "storage": "abfss://demo-lake@niallsdatalake.dfs.core.windows.net/adventure-works/DLT-pipelines/adventure_works_demo_1",
+    "target": "adventure_works_demo_1"
+}

@@ -1,0 +1,77 @@
+{
+  "spark_version": {
+    "type": "unlimited",
+    "defaultValue": "11.2.x-scala2.12"
+  },
+  "driver_instance_pool_id": {
+    "type": "fixed",
+    "value": "0913-124702-glove3-pool-duiw13n2",
+    "hidden": true
+  },
+  "instance_pool_id": {
+    "type": "fixed",
+    "value": "0913-124702-glove3-pool-duiw13n2",
+    "hidden": true
+  },
+  "spark_conf.spark.databricks.cluster.profile": {
+    "type": "fixed",
+    "value": "singleNode",
+    "hidden": true
+  },
+  "num_workers": {
+    "type": "fixed",
+    "value": 0,
+    "hidden": true
+  },
+  "autotermination_minutes": {
+    "type": "range",
+    "minValue": 0,
+    "maxValue": 120,
+    "defaultValue": 10,
+    "hidden": false
+  },
+  "spark_conf.fs.azure.account.auth.type": {
+    "type": "fixed",
+    "value": "OAuth"
+  },
+  "spark_conf.fs.azure.account.oauth.provider.type": {
+    "type": "fixed",
+    "value": "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider"
+  },
+  "spark_conf.fs.azure.account.oauth2.client.id": {
+    "type": "fixed",
+    "value": "{{secrets/nialls-keys/SP-Databricks-Client-Id}}"
+  },
+  "spark_conf.fs.azure.account.oauth2.client.endpoint": {
+    "type": "fixed",
+    "value": "{{secrets/nialls-keys/oauth2-endpoint}}"
+  },
+  "spark_conf.fs.azure.account.oauth2.client.secret": {
+    "type": "fixed",
+    "value": "{{secrets/nialls-keys/SP-Databricks-Client-Secret}}"
+  },
+  "spark_conf.fs.azure.account.auth.type.niallsdatalake.dfs.core.windows.net": {
+    "type": "fixed",
+    "value": "SharedKey"
+  },
+  "spark_conf.fs.azure.account.key.niallsdatalake.dfs.core.windows.net": {
+    "type": "fixed",
+    "value": "{{secrets/nialls-keys/StorageAccountKey1}}"
+  },
+  "spark_conf.fs.azure.account.auth.type.niallsdatalake.blob.core.windows.net": {
+    "type": "fixed",
+    "value": "SharedKey"
+  },
+  "spark_conf.fs.azure.account.key.niallsdatalake.blob.core.windows.net": {
+    "type": "fixed",
+    "value": "{{secrets/nialls-keys/StorageAccountKey1}}"
+  },
+  "spark_conf.fs.azure.account.auth.type.niallsdatalake.queue.core.windows.net": {
+    "type": "fixed",
+    "value": "SharedKey"
+  },
+  "spark_conf.fs.azure.account.key.niallsdatalake.queue.core.windows.net": {
+    "type": "fixed",
+    "value": "{{secrets/nialls-keys/StorageAccountKey1}}"
+  }
+}
