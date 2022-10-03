@@ -143,7 +143,7 @@ def Silver_Product_Enriched_spark_sql():
 
 # MAGIC %sql
 # MAGIC 
-# MAGIC CREATE INCREMENTAL LIVE TABLE Bronze_Product_Model
+# MAGIC CREATE STREAMING LIVE TABLE Bronze_Product_Model
 # MAGIC TBLPROPERTIES ("layer" = "bronze")
 # MAGIC AS SELECT *,
 # MAGIC           input_file_name() as FileName
