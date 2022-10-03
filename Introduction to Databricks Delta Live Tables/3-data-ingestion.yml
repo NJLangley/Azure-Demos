@@ -1,0 +1,56 @@
+tables:
+  Address:
+    bronze:
+      type: view
+      format: csv
+      options:
+        delimiter: '|'
+        header: True
+        inferSchema: True
+    silver:
+      type: table
+      
+    
+  CustomerAddress:
+    bronze:
+      type: table
+      format: csv
+      options:
+        delimiter: '|'
+        header: True
+        inferSchema: True
+        
+  SalesOrderHeader:
+    bronze:
+      type: table
+      format: csv
+      options:
+        delimiter: '|'
+        header: True
+        inferSchema: True
+    silver:
+      type: table
+      expect:
+        Status_Not_Equal_To_99: 'Status <> 99'
+      expect_or_drop:
+        Total_is_Correct: '(SubTotal + TaxAmt + Freight) = TotalDue'
+
+  Customer:
+    bronze:
+      type: table
+      format: csv
+      options:
+        delimiter: '|'
+        header: True
+        inferSchema: True
+    silver:
+      type: table
+      cdc:
+        scd_type: 1
+        keys:
+          - CustomerID
+        sequence_by: ModifiedDate
+        except_column_list:
+          - PasswordHash
+          - PasswordSalt
+          - rowguid
