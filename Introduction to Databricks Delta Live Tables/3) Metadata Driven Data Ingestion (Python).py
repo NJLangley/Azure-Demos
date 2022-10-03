@@ -180,7 +180,7 @@ def build_cdc_config(config):
     return CdcConfig(stored_as_scd_type, keys, sequence_by, column_list, except_column_list)
 
 def build_dlt_entity(table, layer, config, target_root_path, landed_root_path=None):
-    dlt_type = config.get('type')
+    dlt_type = config.get('dlt_type')
     file_format = config.get('format')
     options = config.get('options', {})
     expect = config.get('expect', {})
@@ -240,12 +240,20 @@ def create_silver(table, dlt_config: TargetDltEntity):
                 'source': dlt_config.source_table_name
             }
             cdc_args = cdc_tables | dataclasses.asdict(dlt_config.cdc_config)
-            dlt.apply_changes(**cdc_args)   
+            dlt.apply_changes(**cdc_args)
 
 # COMMAND ----------
 
 import yaml
 def get_yaml_config(config_path):
+    # If the config file is on the lake copy it to a temp folder on dbfs so we can read it
+    if config_path.startswith('abfss://'):
+        filename = config_path.split('/')[-1]
+        dbfs_path = f'dbfs:/tmp/{filename}'
+        dbutils.fs.cp(config_path, dbfs_path)
+
+        config_path = dbfs_path.replace('dbfs:/', '/dbfs/')
+
     with open(config_path, 'r') as file:
         return yaml.safe_load(file)
 
