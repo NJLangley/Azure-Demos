@@ -10,7 +10,7 @@
 
 -- COMMAND ----------
 
-CREATE INCREMENTAL LIVE TABLE Bronze_Product
+CREATE STREAMING LIVE TABLE Bronze_Product
 TBLPROPERTIES ("layer" = "bronze")
 AS SELECT *,
           input_file_name() as FileName
@@ -25,7 +25,7 @@ AS SELECT *,
 
 -- COMMAND ----------
 
-CREATE INCREMENTAL LIVE TABLE Bronze_ProductCategory
+CREATE STREAMING LIVE TABLE Bronze_ProductCategory
 COMMENT "The Adventure Works bronze product category table ingested from landed data"
 TBLPROPERTIES ("layer" = "bronze")
 AS SELECT *,
@@ -38,6 +38,11 @@ AS SELECT *,
                       "inferSchema", "true"
                     )
                    );
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC > ***Note:*** *The keyword* `INCREMENTAL` *does the same thing as* `STREAMING`*, but is and older syntax and is deprecated. Not all the docs are up to date though!*
 
 -- COMMAND ----------
 
@@ -65,7 +70,7 @@ AS SELECT *,
 -- COMMAND ----------
 
 -- View's only exist as an intermediate step in a DLT pipeline. We cannot query them after the pipeline has run 
-CREATE INCREMENTAL LIVE VIEW Bronze_SalesOrderHeader
+CREATE STREAMING LIVE VIEW Bronze_SalesOrderHeader
 TBLPROPERTIES ("layer" = "bronze")
 AS SELECT *,
           input_file_name() as FileName
@@ -109,7 +114,7 @@ AS SELECT *,
 
 -- COMMAND ----------
 
-CREATE INCREMENTAL LIVE TABLE Silver_SalesOrderHeader (
+CREATE STREAMING LIVE TABLE Silver_SalesOrderHeader (
   CONSTRAINT Status_Not_Equal_To_99 EXPECT ( Status <> 99 ),
   CONSTRAINT Total_is_Correct EXPECT ( (SubTotal + TaxAmt + Freight) = TotalDue ) ON VIOLATION DROP ROW
 )
@@ -142,7 +147,7 @@ AS SELECT *
 -- COMMAND ----------
 
 -- This table is not incremental, so is fully loaded each time the pipeline runs
-CREATE INCREMENTAL LIVE TABLE Silver_Product_Enriched (
+CREATE STREAMING LIVE TABLE Silver_Product_Enriched (
   CONSTRAINT SellStartDate_Is_Not_Null EXPECT (SellStartDate IS NOT NULL) ON VIOLATION DROP ROW,
   CONSTRAINT ProductCategory_Is_Not_Null EXPECT (ProductCategory IS NOT NULL)
 )
@@ -192,7 +197,7 @@ AS SELECT
 -- COMMAND ----------
 
 -- Without using the APPLY CHANGES INTO syntax, no deduplication happens
-CREATE INCREMENTAL LIVE TABLE Silver_Customer_No_SCD
+CREATE STREAMING LIVE TABLE Silver_Customer_No_SCD
 COMMENT "The Adventure Works silver customer table using the SCD1 merge type"
 LOCATION "abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/Demo1/silver/Customer_No_SCD"
 TBLPROPERTIES ("layer" = "silver")
@@ -235,7 +240,7 @@ STORED AS SCD TYPE 1
 -- COMMAND ----------
 
 -- Incremental means the table is a streaming table, and we incrementlly add the changes to it
-CREATE INCREMENTAL LIVE TABLE Silver_Customer_SCD2
+CREATE STREAMING LIVE TABLE Silver_Customer_SCD2
 COMMENT "The Adventure Works silver customer table using the SCD2 merge type"
 LOCATION "abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/Demo1/silver/Customer_SCD2"
 TBLPROPERTIES ("layer" = "silver");
