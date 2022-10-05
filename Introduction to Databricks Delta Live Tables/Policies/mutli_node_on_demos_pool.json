@@ -1,0 +1,55 @@
+{
+  "spark_version": {
+    "type": "unlimited",
+    "defaultValue": "11.2.x-scala2.12"
+  },
+  "driver_instance_pool_id": {
+    "type": "fixed",
+    "value": "<your pool id>",
+    "hidden": true
+  },
+  "instance_pool_id": {
+    "type": "fixed",
+    "value": "<your pool id>",
+    "hidden": true
+  },
+  "autoscale.min_workers": {
+    "type": "fixed",
+    "value": 1,
+    "hidden": false
+  },
+  "autoscale.max_workers": {
+    "type": "range",
+    "minValue": 1,
+    "maxValue": 2,
+    "defaultValue": 2,
+    "hidden": false
+  },
+  "autotermination_minutes": {
+    "type": "range",
+    "minValue": 0,
+    "maxValue": 120,
+    "defaultValue": 10,
+    "hidden": false
+  },
+  "spark_conf.fs.azure.account.auth.type": {
+    "type": "fixed",
+    "value": "OAuth"
+  },
+  "spark_conf.fs.azure.account.oauth.provider.type": {
+    "type": "fixed",
+    "value": "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider"
+  },
+  "spark_conf.fs.azure.account.oauth2.client.id": {
+    "type": "fixed",
+    "value": "{{secrets/<your secret scope>/SP-Databricks-Client-Id}}"
+  },
+  "spark_conf.fs.azure.account.oauth2.client.endpoint": {
+    "type": "fixed",
+    "value": "{{secrets/<your secret scope>/oauth2-endpoint}}"
+  },
+  "spark_conf.fs.azure.account.oauth2.client.secret": {
+    "type": "fixed",
+    "value": "{{secrets/<your secret scope>/SP-Databricks-Client-Secret}}"
+  }
+}

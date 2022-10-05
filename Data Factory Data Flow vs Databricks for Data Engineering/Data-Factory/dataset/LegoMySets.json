@@ -12,7 +12,7 @@
 				"type": "AzureBlobFSLocation",
 				"fileName": "my_sets.csv",
 				"folderPath": "raw/rebrickable/csv",
-				"fileSystem": "demo-lake"
+				"fileSystem": "<your storage account>"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",

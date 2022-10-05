@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"folderPath": "processed/rebrickable/data-factory/parts",
-				"fileSystem": "demo-lake"
+				"fileSystem": "<your storage account>"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",

@@ -1,0 +1,34 @@
+{
+    "clusters": [
+        {
+            "label": "default",
+            "instance_pool_id": "<your pool id>",
+            "policy_id": "<your policy id>",
+            "driver_instance_pool_id": "<your pool id>",
+            "autoscale": {
+                "min_workers": 1,
+                "max_workers": 2,
+                "mode": "LEGACY"
+            }
+        },
+        {
+            "label": "maintenance",
+            "policy_id": "<your policy id>"
+        }
+    ],
+    "development": true,
+    "continuous": false,
+    "channel": "CURRENT",
+    "edition": "ADVANCED",
+    "photon": false,
+    "libraries": [
+        {
+            "notebook": {
+                "path": "/Repos/<your git repo>/Introduction to Databricks Delta Live Tables/3) Metadata Driven Data Ingestion (Python)"
+            }
+        }
+    ],
+    "name": "AdventureWorks_Demo3",
+    "storage": "abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/DLT-pipelines/adventure_works_demo_3",
+    "target": "adventure_works_demo_3"
+}

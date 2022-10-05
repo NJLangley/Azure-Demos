@@ -4,7 +4,7 @@
 		"annotations": [],
 		"type": "AzureKeyVault",
 		"typeProperties": {
-			"baseUrl": "https://Nialls-Keys.vault.azure.net/"
+			"baseUrl": "https://<your secret scope>.vault.azure.net/"
 		}
 	}
 }

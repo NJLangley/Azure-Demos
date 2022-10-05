@@ -1,0 +1,119 @@
+tables:
+  Colors:
+    bronze:
+      dlt_type: view
+      format: csv
+      options:
+        delimiter: ','
+        header: True
+        inferSchema: True
+        pathGlobFilter: colors.csv
+    silver:
+      dlt_type: table
+
+  Inventories:
+    bronze:
+      dlt_type: view
+      format: csv
+      options:
+        delimiter: ','
+        header: True
+        inferSchema: True
+        pathGlobFilter: inventories.csv
+    silver:
+      dlt_type: table
+
+  Inventory_Parts:
+    bronze:
+      dlt_type: view
+      format: csv
+      options:
+        delimiter: ','
+        header: True
+        inferSchema: True
+        pathGlobFilter: inventory_parts.csv
+    silver:
+      dlt_type: table
+
+  Inventory_Sets:
+    bronze:
+      dlt_type: view
+      format: csv
+      options:
+        delimiter: ','
+        header: True
+        inferSchema: True
+        pathGlobFilter: inventory_sets.csv
+    silver:
+      dlt_type: table
+
+  My_Sets:
+    bronze:
+      dlt_type: view
+      format: csv
+      options:
+        delimiter: ','
+        header: True
+        inferSchema: True
+        pathGlobFilter: my_sets.csv
+    silver:
+      dlt_type: table
+
+  Part_Categories:
+    bronze:
+      dlt_type: view
+      format: csv
+      options:
+        delimiter: ','
+        header: True
+        inferSchema: True
+        pathGlobFilter: part_categories.csv
+    silver:
+      dlt_type: table
+  Part_Relationships:
+    bronze:
+      dlt_type: view
+      format: csv
+      options:
+        delimiter: ','
+        header: True
+        inferSchema: True
+        pathGlobFilter: part_relationships.csv
+    silver:
+      dlt_type: table
+
+  Parts:
+    bronze:
+      dlt_type: view
+      format: csv
+      options:
+        delimiter: ','
+        header: True
+        inferSchema: True
+        pathGlobFilter: parts.csv
+    silver:
+      dlt_type: table
+
+  Sets:
+    bronze:
+      dlt_type: view
+      format: csv
+      options:
+        delimiter: ','
+        header: True
+        inferSchema: True
+        pathGlobFilter: sets.csv
+    silver:
+      dlt_type: table
+
+  Themes:
+    bronze:
+      dlt_type: view
+      format: csv
+      options:
+        delimiter: ','
+        header: True
+        inferSchema: True
+        pathGlobFilter: themes.csv
+    silver:
+      dlt_type: table
