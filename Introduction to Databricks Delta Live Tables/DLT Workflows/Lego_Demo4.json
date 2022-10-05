@@ -1,0 +1,41 @@
+{
+    "clusters": [
+        {
+            "label": "default",
+            "instance_pool_id": "1002-102406-jog19-pool-qcfi0qkq",
+            "policy_id": "DE62CCA2A5000048",
+            "driver_instance_pool_id": "1002-102406-jog19-pool-qcfi0qkq",
+            "autoscale": {
+                "min_workers": 1,
+                "max_workers": 2,
+                "mode": "LEGACY"
+            }
+        },
+        {
+            "label": "maintenance",
+            "policy_id": "DE62CCA2A5000048"
+        }
+    ],
+    "development": true,
+    "continuous": false,
+    "channel": "CURRENT",
+    "edition": "ADVANCED",
+    "photon": false,
+    "libraries": [
+        {
+            "notebook": {
+                "path": "/Repos/niall.langley@redkite.com/Azure-Demos-Private/Introduction to Databricks Delta Live Tables/3) Metadata Driven Data Ingestion (Python)"
+            }
+        }
+    ],
+    "name": "Lego_Demo4",
+    "storage": "abfss://demo-lake@puddle.dfs.core.windows.net/lego/DLT-pipelines/lego_demo_4",
+    "configuration": {
+        "dlt_metadata.storage_account": "puddle",
+        "dlt_metadata.storage_container": "demo-lake",
+        "dlt_metadata.landed_root_path": "raw/rebrickable",
+        "dlt_metadata.lake_root_path": "lego/Demo4",
+        "dlt_metadata.yaml_metadata_path": "abfss://demo-lake@puddle.dfs.core.windows.net/DLT_Demos_Metadata/4-lego-data-ingestion.yml"
+    },
+    "target": "lego_demo_4"
+}

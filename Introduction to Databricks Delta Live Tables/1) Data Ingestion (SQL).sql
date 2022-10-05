@@ -6,6 +6,11 @@
 -- COMMAND ----------
 
 -- MAGIC %md
+-- MAGIC > ***Note:*** *Update the paths for the data lake connection before running on your own environment!*
+
+-- COMMAND ----------
+
+-- MAGIC %md
 -- MAGIC ## Bronze / Ingestion tables
 
 -- COMMAND ----------
@@ -109,11 +114,6 @@ AS SELECT *,
 
 -- COMMAND ----------
 
--- MAGIC %md
--- MAGIC > ***Note:*** *The query below does not work as a left join, as this would require a watermark on each side of the join to ensure late arriving data is handled correclty. Changing to an inner join works, but then the `ProductCategory_Is_Not_Null` data qaulity check is broken as records will get dropped in the join if the product category is not found.*
-
--- COMMAND ----------
-
 CREATE STREAMING LIVE TABLE Silver_SalesOrderHeader (
   CONSTRAINT Status_Not_Equal_To_99 EXPECT ( Status <> 99 ),
   CONSTRAINT Total_is_Correct EXPECT ( (SubTotal + TaxAmt + Freight) = TotalDue ) ON VIOLATION DROP ROW
@@ -127,7 +127,7 @@ AS SELECT *
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC The next table is not incremental, so is re-loaded each time the DLT workflow runs. It is reading from a incremental source, but as the target is not incremental we don't ad the `STREAMING()` wrapper to the source table
+-- MAGIC The next table is not incremental, so is re-loaded each time the DLT workflow runs. It is reading from a incremental source, but as the target is not incremental we don't ad the `STREAM()` wrapper to the source table
 
 -- COMMAND ----------
 
@@ -143,6 +143,11 @@ AS SELECT *
 -- MAGIC %md
 -- MAGIC ##### We can join tables too
 -- MAGIC There are some limits on join types though due to DLT being built on top of structured streaming
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC > ***Note:*** *The query below does not work as a left join, as this would require a watermark on each side of the join to ensure late arriving data is handled correclty. Changing to an inner join works, but then the `ProductCategory_Is_Not_Null` data qaulity check is broken as records will get dropped in the join if the product category is not found.*
 
 -- COMMAND ----------
 

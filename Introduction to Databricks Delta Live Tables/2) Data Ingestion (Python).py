@@ -1,5 +1,6 @@
 # Databricks notebook source
-# MAGIC %pip install PyYAML
+# MAGIC %md
+# MAGIC > ***Note:*** *Update the paths for the data lake connection before running on your own environment!*
 
 # COMMAND ----------
 

@@ -10,7 +10,8 @@ tables:
     silver:
       dlt_type: table
       
-    
+  
+        
   CustomerAddress:
     bronze:
       dlt_type: table

@@ -1,5 +1,10 @@
 -- Databricks notebook source
 -- MAGIC %md
+-- MAGIC > ***Note:*** *Update the paths for the data lake connection before running on your own environment!*
+
+-- COMMAND ----------
+
+-- MAGIC %md
 -- MAGIC ## Customer SCD tables
 
 -- COMMAND ----------
@@ -36,7 +41,7 @@ WHERE CustomerId = 6
 
 -- This does not exist as it was a view
 SELECT *
-FROM adventure_works_demo_1.Bronze_ProductModel
+FROM adventure_works_demo_1.Bronze_SalesOrderHeaderBronze_ProductModel
 
 -- COMMAND ----------
 
@@ -46,7 +51,7 @@ FROM adventure_works_demo_1.Bronze_ProductModel
 -- COMMAND ----------
 
 SELECT *
-FROM adventure_works_demo_1.Bronze_SalesOrderHeader
+FROM adventure_works_demo_1.Silver_SalesOrderHeader
 
 -- COMMAND ----------
 
@@ -68,7 +73,7 @@ FROM event_log_raw
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC This is a sample query from the Databricks docs to show the data quality from the last run. 
+-- MAGIC ### This is a sample query from the Databricks docs to show the data quality from the last run. 
 
 -- COMMAND ----------
 
@@ -115,7 +120,7 @@ GROUP BY
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Here's a query to get the number of rows updated/dropped on each table in the last run
+-- MAGIC ### Here's a query to get the number of rows updated/dropped on each table in the last run
 
 -- COMMAND ----------
 
@@ -146,17 +151,8 @@ ORDER BY
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Changing the query to add more columns does not update old records without a reload
+-- MAGIC ### Changing the query to add more columns does not update old records without a reload
 
 -- COMMAND ----------
 
 select * from adventure_works_demo_1.Silver_Product_Enriched
-
--- COMMAND ----------
-
--- MAGIC %md
--- MAGIC ### Drop the DB if we want to start from scratch
-
--- COMMAND ----------
-
--- DROP DATABASE adventure_works_demo_1 CASCADE

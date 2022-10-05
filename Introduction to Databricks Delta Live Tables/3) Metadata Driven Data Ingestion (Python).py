@@ -4,6 +4,11 @@
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC > ***Note:*** *Update the paths for the data lake connection before running on your own environment!*
+
+# COMMAND ----------
+
+# MAGIC %md
 # MAGIC # 3) Metadata Driven Data ingestion Using Python
 # MAGIC Drive table creating using metadata in a YAML file in the git repo
 # MAGIC > ***Note:*** *Any pip install commands to install required modules must be the first cell in the notebook*
@@ -294,7 +299,9 @@ silver_root_path = f'{lake_root_path}/silver'
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ##### Build the full DLT graph. If we run the notebook directly, this will output JSON showing what will be submitted to the DLT process to build the tables
+# MAGIC ##### Build the full DLT graph. 
+# MAGIC If we run the notebook directly, this will output JSON showing what will be submitted to the DLT process to build the tables
+# MAGIC If the notebook is run from a DLT workflow, it will loop over the list of tables and build DLT tables for us
 
 # COMMAND ----------
 
