@@ -276,11 +276,11 @@ def get_yaml_config(config_path):
 
 # COMMAND ----------
 
-storage_account = spark.conf.get('dlt_metadata.storage_account',         'puddle')
-storage_container = spark.conf.get('dlt_metadata.storage_container',     'demo-lake')
+storage_account = spark.conf.get('dlt_metadata.storage_account',         '<your storage account container>')
+storage_container = spark.conf.get('dlt_metadata.storage_container',     '<your storage account>')
 landed_root_path = spark.conf.get('dlt_metadata.landed_root_path',       'adventure-works/landed')
 lake_root_path = spark.conf.get('dlt_metadata.lake_root_path',           'adventure-works/Demo3')
-yaml_metadata_path = spark.conf.get('dlt_metadata.yaml_metadata_path',   '/Workspace/Repos/niall.langley@redkite.com/Azure-Demos-Private/Introduction to Databricks Delta Live Tables/3-data-ingestion.yml')
+yaml_metadata_path = spark.conf.get('dlt_metadata.yaml_metadata_path',   '/Workspace/Repos/<your git repo>/Introduction to Databricks Delta Live Tables/3-data-ingestion.yml')
 
 # COMMAND ----------
 

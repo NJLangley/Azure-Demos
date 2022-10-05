@@ -63,7 +63,7 @@ FROM adventure_works_demo_1.Silver_SalesOrderHeader
 CREATE OR REPLACE TEMPORARY VIEW event_log_raw
 AS
 SELECT *
-FROM DELTA.`abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/DLT-pipelines/adventure_works_demo_1/system/events`
+FROM DELTA.`abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/DLT-pipelines/adventure_works_demo_1/system/events`
 
 -- COMMAND ----------
 

@@ -19,7 +19,7 @@ CREATE STREAMING LIVE TABLE Bronze_Product
 TBLPROPERTIES ("layer" = "bronze")
 AS SELECT *,
           input_file_name() as FileName
-   FROM cloud_files("abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/landed/csv/Product", 
+   FROM cloud_files("abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/landed/csv/Product", 
                     "csv",
                     map(
                       "delimiter", "|",
@@ -35,7 +35,7 @@ COMMENT "The Adventure Works bronze product category table ingested from landed 
 TBLPROPERTIES ("layer" = "bronze")
 AS SELECT *,
           input_file_name() as FileName
-   FROM cloud_files("abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/landed/csv/ProductCategory", 
+   FROM cloud_files("abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/landed/csv/ProductCategory", 
                     "csv",
                     map(
                       "delimiter", "|",
@@ -53,11 +53,11 @@ AS SELECT *,
 
 CREATE INCREMENTAL LIVE TABLE Bronze_Customer
 COMMENT "The Adventure Works bronze customer table ingested from landed data"
-LOCATION "abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/Demo1/bronze/Customer"
+LOCATION "abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/Demo1/bronze/Customer"
 TBLPROPERTIES ("layer" = "bronze")
 AS SELECT *,
           input_file_name() as FileName
-   FROM cloud_files("abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/landed/csv/Customer", 
+   FROM cloud_files("abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/landed/csv/Customer", 
                     "csv",
                     map(
                       "delimiter", "|",
@@ -79,7 +79,7 @@ CREATE STREAMING LIVE VIEW Bronze_SalesOrderHeader
 TBLPROPERTIES ("layer" = "bronze")
 AS SELECT *,
           input_file_name() as FileName
-   FROM cloud_files("abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/landed/csv/SalesOrderHeader", 
+   FROM cloud_files("abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/landed/csv/SalesOrderHeader", 
                     "csv",
                     map(
                       "delimiter", "|",
@@ -100,11 +100,11 @@ AS SELECT *,
 
 CREATE LIVE TABLE Bronze_ProductModel
 COMMENT "The Adventure Works bronze product model table ingested from landed data"
-LOCATION "abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/Demo1/bronze/ProductModel"
+LOCATION "abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/Demo1/bronze/ProductModel"
 TBLPROPERTIES ("layer" = "bronze")
 AS SELECT *,
           input_file_name() as FileName
-   FROM parquet.`abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/landed/parquet/ProductModel/`
+   FROM parquet.`abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/landed/parquet/ProductModel/`
 
 -- COMMAND ----------
 
@@ -119,7 +119,7 @@ CREATE STREAMING LIVE TABLE Silver_SalesOrderHeader (
   CONSTRAINT Total_is_Correct EXPECT ( (SubTotal + TaxAmt + Freight) = TotalDue ) ON VIOLATION DROP ROW
 )
 COMMENT "The Adventure Works silver product table ingested from landed data"
-LOCATION "abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/Demo1/silver/SalesOrderHeader"
+LOCATION "abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/Demo1/silver/SalesOrderHeader"
 TBLPROPERTIES ("layer" = "silver")
 AS SELECT *
    FROM STREAM (live.Bronze_SalesOrderHeader)
@@ -133,7 +133,7 @@ AS SELECT *
 
 CREATE LIVE TABLE Silver_ProductCategory
 COMMENT "The Adventure Works silver product category ingested from landed data"
-LOCATION "abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/Demo1/silver/ProductCategory"
+LOCATION "abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/Demo1/silver/ProductCategory"
 TBLPROPERTIES ("layer" = "silver")
 AS SELECT *
    FROM live.Bronze_ProductCategory
@@ -157,7 +157,7 @@ CREATE STREAMING LIVE TABLE Silver_Product_Enriched (
   CONSTRAINT ProductCategory_Is_Not_Null EXPECT (ProductCategory IS NOT NULL)
 )
 COMMENT "The Adventure Works silver product table ingested from landed data"
-LOCATION "abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/Demo1/silver/Product"
+LOCATION "abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/Demo1/silver/Product"
 TBLPROPERTIES ("layer" = "silver")
 AS SELECT
      p.ProductID
@@ -204,7 +204,7 @@ AS SELECT
 -- Without using the APPLY CHANGES INTO syntax, no deduplication happens
 CREATE STREAMING LIVE TABLE Silver_Customer_No_SCD
 COMMENT "The Adventure Works silver customer table using the SCD1 merge type"
-LOCATION "abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/Demo1/silver/Customer_No_SCD"
+LOCATION "abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/Demo1/silver/Customer_No_SCD"
 TBLPROPERTIES ("layer" = "silver")
 AS SELECT *
    FROM STREAM(live.Bronze_Customer);
@@ -219,7 +219,7 @@ AS SELECT *
 -- Incremental means the table is a streaming table, and we incrementlly add the changes to it
 CREATE INCREMENTAL LIVE TABLE Silver_Customer_SCD1
 COMMENT "The Adventure Works silver customer table using the SCD1 merge type"
-LOCATION "abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/Demo1/silver/Customer_SCD1"
+LOCATION "abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/Demo1/silver/Customer_SCD1"
 TBLPROPERTIES ("layer" = "silver");
 
 -- COMMAND ----------
@@ -247,7 +247,7 @@ STORED AS SCD TYPE 1
 -- Incremental means the table is a streaming table, and we incrementlly add the changes to it
 CREATE STREAMING LIVE TABLE Silver_Customer_SCD2
 COMMENT "The Adventure Works silver customer table using the SCD2 merge type"
-LOCATION "abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/Demo1/silver/Customer_SCD2"
+LOCATION "abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/Demo1/silver/Customer_SCD2"
 TBLPROPERTIES ("layer" = "silver");
 
 -- COMMAND ----------

@@ -5,12 +5,12 @@
   },
   "driver_instance_pool_id": {
     "type": "fixed",
-    "value": "0913-124702-glove3-pool-duiw13n2",
+    "value": "<your pool id>",
     "hidden": true
   },
   "instance_pool_id": {
     "type": "fixed",
-    "value": "0913-124702-glove3-pool-duiw13n2",
+    "value": "<your pool id>",
     "hidden": true
   },
   "autoscale.min_workers": {
@@ -42,15 +42,15 @@
   },
   "spark_conf.fs.azure.account.oauth2.client.id": {
     "type": "fixed",
-    "value": "{{secrets/nialls-keys/SP-Databricks-Client-Id}}"
+    "value": "{{secrets/<your secret scope>/SP-Databricks-Client-Id}}"
   },
   "spark_conf.fs.azure.account.oauth2.client.endpoint": {
     "type": "fixed",
-    "value": "{{secrets/nialls-keys/oauth2-endpoint}}"
+    "value": "{{secrets/<your secret scope>/oauth2-endpoint}}"
   },
   "spark_conf.fs.azure.account.oauth2.client.secret": {
     "type": "fixed",
-    "value": "{{secrets/nialls-keys/SP-Databricks-Client-Secret}}"
+    "value": "{{secrets/<your secret scope>/SP-Databricks-Client-Secret}}"
   },
   "spark_conf.fs.azure.account.auth.type.niallsdatalake.dfs.core.windows.net": {
     "type": "fixed",
@@ -58,7 +58,7 @@
   },
   "spark_conf.fs.azure.account.key.niallsdatalake.dfs.core.windows.net": {
     "type": "fixed",
-    "value": "{{secrets/nialls-keys/StorageAccountKey1}}"
+    "value": "{{secrets/<your secret scope>/StorageAccountKey1}}"
   },
   "spark_conf.fs.azure.account.auth.type.niallsdatalake.blob.core.windows.net": {
     "type": "fixed",
@@ -66,7 +66,7 @@
   },
   "spark_conf.fs.azure.account.key.niallsdatalake.blob.core.windows.net": {
     "type": "fixed",
-    "value": "{{secrets/nialls-keys/StorageAccountKey1}}"
+    "value": "{{secrets/<your secret scope>/StorageAccountKey1}}"
   },
   "spark_conf.fs.azure.account.auth.type.niallsdatalake.queue.core.windows.net": {
     "type": "fixed",
@@ -74,6 +74,6 @@
   },
   "spark_conf.fs.azure.account.key.niallsdatalake.queue.core.windows.net": {
     "type": "fixed",
-    "value": "{{secrets/nialls-keys/StorageAccountKey1}}"
+    "value": "{{secrets/<your secret scope>/StorageAccountKey1}}"
   }
 }

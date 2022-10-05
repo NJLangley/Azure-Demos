@@ -35,8 +35,8 @@ print('Autocomplete should work now')
 
 # COMMAND ----------
 
-storage_account = 'puddle'
-storage_container = 'demo-lake'
+storage_account = '<your storage account container>'
+storage_container = '<your storage account>'
 
 storage_root = f'abfss://{storage_container}@{storage_account}.dfs.core.windows.net/adventure-works'
 
@@ -148,7 +148,7 @@ def Silver_Product_Enriched_spark_sql():
 # MAGIC TBLPROPERTIES ("layer" = "bronze")
 # MAGIC AS SELECT *,
 # MAGIC           input_file_name() as FileName
-# MAGIC    FROM cloud_files("abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/landed/csv/ProductModel", 
+# MAGIC    FROM cloud_files("abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/landed/csv/ProductModel", 
 # MAGIC                     "csv",
 # MAGIC                     map(
 # MAGIC                       "delimiter", "|",

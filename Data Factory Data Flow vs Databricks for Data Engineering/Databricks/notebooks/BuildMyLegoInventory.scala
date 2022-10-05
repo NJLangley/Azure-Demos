@@ -30,7 +30,7 @@ val keyScope: String = "demo-secrets"
 val keyNameServicePrincipalSecret: String = "DataBricksServiceCredential"
 val directoryId: String = "535326ca-52b6-4c57-b6dc-e017f69faf50"
 val storageAccountName: String = "niallsdatalake"
-val fileSystemName: String = "demo-lake"
+val fileSystemName: String = "<your storage account>"
 val sourceRoot: String = s"abfss://$fileSystemName@$storageAccountName.dfs.core.windows.net"
 val keyNameStorageAccountAccessKey: String = "DataLakeStorageAccountAccessKey"
 
@@ -69,20 +69,20 @@ if (dbutils.fs.mounts.map(_.mountPoint).filter(_ == mountPoint).length == 0) {
 val mySets = spark.read
                   .option("header", "true")
                   .option("inferSchema", "true")
-                  .csv("/mnt/demo-lake/raw/rebrickable/csv/my_sets.csv")
+                  .csv("/mnt/<your storage account>/raw/rebrickable/csv/my_sets.csv")
 
 mySets.createOrReplaceTempView("mySets")
 
 val inventories = spark.read
                        .option("header", "true")
                        .option("inferSchema", "true")
-                       .csv("/mnt/demo-lake/raw/rebrickable/csv/inventories.csv")
+                       .csv("/mnt/<your storage account>/raw/rebrickable/csv/inventories.csv")
 inventories.createOrReplaceTempView("inventories")
 
 val inventoryParts = spark.read
                           .option("header", "true")
                           .option("inferSchema", "true")
-                          .csv("/mnt/demo-lake/raw/rebrickable/csv/inventory_parts.csv")
+                          .csv("/mnt/<your storage account>/raw/rebrickable/csv/inventory_parts.csv")
 inventoryParts.createOrReplaceTempView("inventoryParts")
 
 // COMMAND ----------
@@ -148,7 +148,7 @@ sqlContext.cacheTable("default.my_sets_parts")
 // MAGIC DROP TABLE IF EXISTS default.my_sets_parts;
 // MAGIC 
 // MAGIC CREATE EXTERNAL TABLE my_sets_parts
-// MAGIC   LOCATION '/mnt/demo-lake/processed/rebrickable/databricks/my_sets_parts'
+// MAGIC   LOCATION '/mnt/<your storage account>/processed/rebrickable/databricks/my_sets_parts'
 // MAGIC   ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 // MAGIC   STORED AS TEXTFILE
 // MAGIC AS
@@ -199,7 +199,7 @@ myParts.repartition(col("color_id"))
        .mode("overwrite")
        .format("com.databricks.spark.csv")
        .option("header", "true")
-       .save("/mnt/demo-lake/processed/rebrickable/databricks/my_parts")
+       .save("/mnt/<your storage account>/processed/rebrickable/databricks/my_parts")
 
 // COMMAND ----------
 

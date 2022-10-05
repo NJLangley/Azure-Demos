@@ -2,9 +2,9 @@
     "clusters": [
         {
             "label": "default",
-            "instance_pool_id": "1002-102406-jog19-pool-qcfi0qkq",
-            "policy_id": "DE62CCA2A5000048",
-            "driver_instance_pool_id": "1002-102406-jog19-pool-qcfi0qkq",
+            "instance_pool_id": "<your pool id>",
+            "policy_id": "<your policy id>",
+            "driver_instance_pool_id": "<your pool id>",
             "autoscale": {
                 "min_workers": 1,
                 "max_workers": 2,
@@ -13,7 +13,7 @@
         },
         {
             "label": "maintenance",
-            "policy_id": "DE62CCA2A5000048"
+            "policy_id": "<your policy id>"
         }
     ],
     "development": true,
@@ -24,11 +24,11 @@
     "libraries": [
         {
             "notebook": {
-                "path": "/Repos/niall.langley@redkite.com/Azure-Demos-Private/Introduction to Databricks Delta Live Tables/1) Data Ingestion (SQL)"
+                "path": "/Repos/<your git repo>/Introduction to Databricks Delta Live Tables/1) Data Ingestion (SQL)"
             }
         }
     ],
     "name": "AdventureWorks_Demo1",
-    "storage": "abfss://demo-lake@puddle.dfs.core.windows.net/adventure-works/DLT-pipelines/adventure_works_demo_1",
+    "storage": "abfss://<your storage account>@<your storage account container>.dfs.core.windows.net/adventure-works/DLT-pipelines/adventure_works_demo_1",
     "target": "adventure_works_demo_1"
 }
